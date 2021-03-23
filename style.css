@@ -24,3 +24,13 @@ body{
 .labelEstatistica{
     margin-left: 5px;
 }
+
+.certas{
+    display: flex;
+    justify-content: center;
+}
+
+.erradas{
+    display: flex;
+    justify-content: center;
+}
