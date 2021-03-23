@@ -1,0 +1,26 @@
+body{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.labelLetras {
+    font-size: 180px;
+    margin-top:120px;
+    margin-bottom: 120px;
+}
+
+.nav-bar{
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.exibicaoLetras{
+    display: flex;
+    justify-content: center;
+}
+
+.labelEstatistica{
+    margin-left: 5px;
+}
