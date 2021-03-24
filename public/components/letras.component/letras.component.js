@@ -2,7 +2,7 @@ import {  BaseComponent } from "../base.component/base.component.js";
 import {LabelLetrasComponent} from "../label-letras.component/label.letras.component.js";
 import {LabelEstatisticaComponent} from "../label-estatistica.component/label-estatistica.component.js";
 const baseComponent = new BaseComponent();
-
+const MESSAGE_END = 'Finalizado!';
 export class LetrasComponent {
     constructor(){
        this.limpar();
@@ -59,7 +59,12 @@ export class LetrasComponent {
     }
 
     carregarLetra(){
-        this.label.innerHTML=this.getRandomLetter();
+        let letter = this.getRandomLetter();
+        this.label.innerHTML=letter;
+        if(letter === MESSAGE_END){
+            this.label.classList.remove("labelLetras");
+            this.label.classList.add("labelFinalizado");
+        }
     }
 
     getRandomLetter(){
@@ -68,7 +73,7 @@ export class LetrasComponent {
             index = Math.floor(Math.random() * this.listaLetras.length);
        }
        if(this.listaLetras.length===0){
-        return 'Finalizado!'
+        return MESSAGE_END
        }
         
        this.ultimoIndex = index;
