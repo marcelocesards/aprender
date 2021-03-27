@@ -59,7 +59,7 @@ export class CoresComponent {
     async render(container){
         this.element = await baseComponent.renderTemplate({
             container,
-            templatePath: "/components/letras.component/letras.component.html"
+            templatePath: "/components/cores.component/cores.component.html"
         });
         this.addEventListeners();
         this.labelLetrasComponent = new LabelLetrasComponent();
@@ -76,16 +76,16 @@ export class CoresComponent {
 
     addEventListeners(){
         
-        const btn = document.querySelector('.btn-carregar-letras');
+        const btn = this.element.querySelector('.btn-carregar');
         btn.addEventListener('click', ()=>this.carregar());
 
-        const btnCerto = document.querySelector('.btn-certo');
+        const btnCerto = this.element.querySelector('.btn-certo');
         btnCerto.addEventListener('click', ()=>this.respostaCerta());
 
-        const btnErrado = document.querySelector('.btn-errado');
+        const btnErrado = this.element.querySelector('.btn-errado');
         btnErrado.addEventListener('click', ()=>this.respostaErrada());
 
-        const btnReiniciar = document.querySelector('.btn-limpar');
+        const btnReiniciar = this.element.querySelector('.btn-limpar');
         btnReiniciar.addEventListener('click', ()=>{
             this.limpar();
             this.LabelEstErr.innerHTML="";
