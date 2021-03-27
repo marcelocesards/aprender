@@ -4,6 +4,47 @@ body{
     padding: 0;
 }
 
+.select {
+    width: 100%;
+    min-width: 15ch;
+    max-width: 30ch;
+    border: 1px solid var(--select-border);
+    border-radius: 0.25em;
+    padding: 0.25em 0.5em;
+    margin: 2px;
+    font-size: 1.25rem;
+    cursor: pointer;
+    line-height: 1.1;
+    background-color: #fff;
+    background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
+  }
+
+.btn {
+    border-radius: 6px;
+    border: none;
+    padding: 15px 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 2px;
+}
+.btn-info {
+    background-color: #008CBA;
+    color: white;
+}
+.btn-success {
+    background-color: #4CAF50;
+    color: white;
+}
+.btn-danger {
+    background-color: #f44336;
+    color: white;
+}
+.btn-light {
+    background-color: #e7e7e7;
+    color: black;
+}
+
 .labelFinalizado {
     font-size:10vw;
     margin-top:120px;

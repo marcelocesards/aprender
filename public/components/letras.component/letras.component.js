@@ -40,7 +40,7 @@ export class LetrasComponent {
 
     btnCarregarLetrasListener(){
         
-        const btn = document.querySelector('.btn-carregar-letras');
+        const btn = document.querySelector('.btn-carregar');
         btn.addEventListener('click', ()=>this.carregarLetra());
 
         const btnCerto = document.querySelector('.btn-certo');
