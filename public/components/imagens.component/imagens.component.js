@@ -152,6 +152,7 @@ export class ImagensComponent {
         let img = document.createElement("img");
         img.src = url;
         img.alt = alternativeText;
+        img.height = 300;
         return img;
     }
 
