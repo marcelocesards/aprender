@@ -1,44 +1,30 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <link rel="stylesheet" href="style.css">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aprender Letras</title>
+<html lang="pt-BR">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
-    <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
-    <script defer src="/__/firebase/8.3.1/firebase-firestore.js"></script>
-    <script defer src="/__/firebase/8.3.1/firebase-functions.js"></script>
-    <script defer src="/__/firebase/8.3.1/firebase-messaging.js"></script>
-    <script defer src="/__/firebase/8.3.1/firebase-storage.js"></script>
-    <script defer src="/__/firebase/8.3.1/firebase-analytics.js"></script>
-    <script defer src="/__/firebase/8.3.1/firebase-remote-config.js"></script>
-    <script defer src="/__/firebase/8.3.1/firebase-performance.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-  </head>
-  <body>
-    <main>
-        <div class="nav-bar">
-          <select id="modo" class="select">
-            <option value="letras">Aprender Letras</option>
-            <option value="cores">Aprender Cores</option>
-            <option value="numeros">Aprender Numeros</option>
-            <option value="imagens">Aprender Imagens</option>
-          </select>
-        </div>
-        <section class="letras" id="letras"></section>
-        <section class="cores" id="cores"></section>
-        <section class="numeros" id="numeros"></section>
-        <section class="imagens" id="imagens"></section>
-    </main>
-    <script src="index.js" type="module" ></script>
-  </body>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aprender Letras</title>
+</head>
+
+<body>
+  <main>
+    <div class="nav-bar">
+    </div>
+    
+    <section class="letras" id="letras"></section>
+    <section class="cores" id="cores"></section>
+    <section class="numeros" id="numeros"></section>
+    <section class="imagens" id="imagens"></section>
+  </main>
+
+  <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+  <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+  <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+  <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
+  <script defer src="index.js" type="module"></script>
+</body>
+
 </html>
