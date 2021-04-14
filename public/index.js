@@ -8,18 +8,21 @@ async function renderModeOptions(){
     let modeOptions = new ModeOptionsComponent();
     await modeOptions.render(document.querySelector(".nav-bar"));
     window.addEventListener("message", receiveMessage, false);
-    aprender[modo.value]();
+    
+    let mode = localStorage.getItem("mode") || modo.value;
+    modo.value = mode;
+    aprender[mode]();
 }
 
 async function receiveMessage(event){
-    console.log(event);
-    
     if(event.data.indexOf("start-mode:")==0 && window.location.href.indexOf(event.origin)==0){
+        let mode = event.data.split(":")[1];
+        localStorage.setItem("mode",mode);
         letras.innerHTML = null;
         cores.innerHTML = null;
         numeros.innerHTML = null;
         imagens.innerHTML = null;
-        aprender[event.data.split(":")[1]]();
+        aprender[mode]();
     }
 }
 renderModeOptions();

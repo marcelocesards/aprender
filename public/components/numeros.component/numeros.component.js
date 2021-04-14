@@ -1,20 +1,29 @@
 import {  BaseComponent } from "../base.component/base.component.js";
 import {LabelLetrasComponent} from "../label-letras.component/label.letras.component.js";
 import {LabelEstatisticaComponent} from "../label-estatistica.component/label-estatistica.component.js";
+import {NumerosService} from "./numeros.service.js";
+
 const baseComponent = new BaseComponent();
+const numerosService = new NumerosService();
 const MESSAGE_END = 'Finalizado!';
 export class NumerosComponent {
     constructor(){
-       this.limpar();
+       this.clear();
+       this.start();
     }
-
-    limpar(){
+    async start(){
+        this.listaLetras = await numerosService.get();
+    }
+    async restart(){
+        this.clear();
+        this.start();
+        this.LabelEstErr.innerHTML="";
+        this.LabelEst.innerHTML="";
+        this.carregarLetra();
+    }
+    clear(){
         this.corretas=[];
         this.erradas=[];
-        this.listaLetras = []
-        for(let i = 0;i<10;i++){
-            this.listaLetras.push(Math.floor(Math.random() * 100));
-        }
     }
 
     async render(container){
@@ -36,23 +45,10 @@ export class NumerosComponent {
     }
 
     btnCarregarLetrasListener(){
-        
-        const btn = document.querySelector('.btn-carregar');
-        btn.addEventListener('click', ()=>this.carregarLetra());
-
-        const btnCerto = document.querySelector('.btn-certo');
-        btnCerto.addEventListener('click', ()=>this.respostaCerta());
-
-        const btnErrado = document.querySelector('.btn-errado');
-        btnErrado.addEventListener('click', ()=>this.respostaErrada());
-
-        const btnReiniciar = document.querySelector('.btn-limpar');
-        btnReiniciar.addEventListener('click', ()=>{
-            this.limpar();
-            this.LabelEstErr.innerHTML="";
-            this.LabelEst.innerHTML="";
-            this.carregarLetra();
-        });
+        document.querySelector('.btn-carregar').addEventListener('click', ()=>this.carregarLetra());
+        document.querySelector('.btn-certo').addEventListener('click', ()=>this.respostaCerta());
+        document.querySelector('.btn-errado').addEventListener('click', ()=>this.respostaErrada());
+        document.querySelector('.btn-limpar').addEventListener('click', ()=>this.restart());
     }
 
     carregarLetra(){

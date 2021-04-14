@@ -1,0 +1,42 @@
+[
+    {
+        "key": "AZUL",
+        "value": "rgb(0, 0, 255)"
+    },
+    {
+        "key": "VERMELHO",
+        "value": "rgb(255, 0, 0)"
+    },
+    {
+        "key": "VERDE",
+        "value": "rgb(0, 255, 0)"
+    },
+    {
+        "key": "AMARELO",
+        "value": "rgb(255, 255, 0)"
+    },
+    {
+        "key": "LARANJA",
+        "value": "rgb(255, 128, 0)"
+    },
+    {
+        "key": "ROXO",
+        "value": "rgb(128, 0, 255)"
+    },
+    {
+        "key": "ROSA",
+        "value": "rgb(255, 0, 255)"
+    },
+    {
+        "key": "CINZA",
+        "value": "rgb(128, 128, 128)"
+    },
+    {
+        "key": "PRETO",
+        "value": "rgb(0, 0, 0)"
+    },
+    {
+        "key": "MARROM",
+        "value": "rgb(102, 51, 0)"
+    }   
+]
