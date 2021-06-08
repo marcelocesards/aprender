@@ -9,8 +9,6 @@ const imagensService = new ImagensService();
 const MESSAGE_END = 'Parabéns!';
 export class ImagensComponent {
     constructor(){
-       this.clear();
-       this.start();
     }
     async start(){
         this.lista = await imagensService.get();
@@ -43,6 +41,8 @@ export class ImagensComponent {
         this.LabelEstErr = await labelEstatistica.render(this.element.querySelector(".erradas")); 
 
         this.addEventListeners();
+        this.clear();
+        await this.start();
         this.carregar();
         return this.element;
     }

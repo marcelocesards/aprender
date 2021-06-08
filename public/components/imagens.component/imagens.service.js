@@ -1,5 +1,10 @@
+const db = firebase.database();
 export class ImagensService {
     async get(){
-        return await (await fetch("/components/imagens.component/imagens.json")).json();
+        return new Promise(resolve=>{
+            db.ref('imagens').once('value').then((snapshot) => {
+                resolve(snapshot.val());
+            });
+        })
     }
 }
