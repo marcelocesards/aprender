@@ -1,59 +1,31 @@
 import {  BaseComponent } from "../base.component/base.component.js";
 import {LabelLetrasComponent} from "../label-letras.component/label.letras.component.js";
 import {LabelEstatisticaComponent} from "../label-estatistica.component/label-estatistica.component.js";
+import {CoresService} from "./cores.service.js";
+import {ActionsComponent} from "../actions.component/actions.component.js";
+
 const baseComponent = new BaseComponent();
-const MESSAGE_END = 'Finalizado!';
+const coresService = new CoresService();
+
+const MESSAGE_END = 'Parabéns!';
 export class CoresComponent {
     constructor(){
-       this.limpar();
+       this.clear();
+       this.start();
     }
-
-    limpar(){
+    async start(){
+        this.lista = await coresService.get();
+    }
+    async restart(){
+        this.clear();
+        await this.start();
+        this.LabelEstErr.innerHTML="";
+        this.LabelEst.innerHTML="";
+        this.carregar();
+    }
+    clear(){
         this.corretas=[];
         this.erradas=[];
-        this.lista = [
-            {
-                key: "AZUL",
-                value: "rgb(0, 0, 255)"
-            },
-            {
-                key: "VERMELHO",
-                value: "rgb(255, 0, 0)"
-            },
-            {
-                key: "VERDE",
-                value: "rgb(0, 255, 0)"
-            },
-            {
-                key: "AMARELO",
-                value: "rgb(255, 255, 0)"
-            },
-            {
-                key: "LARANJA",
-                value: "rgb(255, 128, 0)"
-            },
-            {
-                key: "ROXO",
-                value: "rgb(128, 0, 255)"
-            },
-            {
-                key: "ROSA",
-                value: "rgb(255, 0, 255)"
-            },
-            {
-                key: "CINZA",
-                value: "rgb(128, 128, 128)"
-            },
-            {
-                key: "PRETO",
-                value: "rgb(0, 0, 0)"
-            },
-            {
-                key: "MARROM",
-                value: "rgb(102, 51, 0)"
-            }
-            
-        ]
     }
 
     async render(container){
@@ -61,37 +33,26 @@ export class CoresComponent {
             container,
             templatePath: "/components/cores.component/cores.component.html"
         });
+        const actionsComponent = new ActionsComponent();
+        this.actions = await actionsComponent.render(this.element.querySelector(".navbar"));
+
+        const labelLetrasComponent = new LabelLetrasComponent();
+        this.label = await labelLetrasComponent.render(this.element.querySelector(".exibicaoLetras"));        
+
+        const labelEstatistica = new LabelEstatisticaComponent();
+        this.LabelEst = await labelEstatistica.render(this.element.querySelector(".certas")); 
+        this.LabelEstErr = await labelEstatistica.render(this.element.querySelector(".erradas")); 
+        
         this.addEventListeners();
-        this.labelLetrasComponent = new LabelLetrasComponent();
-        this.label = await this.labelLetrasComponent.render(this.element);        
-        let labelEstatistica = new LabelEstatisticaComponent();
-        this.LabelEst = await labelEstatistica.render(this.element); 
-        this.LabelEstErr = await labelEstatistica.render(this.element); 
-        this.element.querySelector(".exibicaoLetras").appendChild(this.label);
-        this.element.querySelector(".certas").appendChild(this.LabelEst);
-        this.element.querySelector(".erradas").appendChild(this.LabelEstErr);
         this.carregar();
         return this.element;
     }
 
     addEventListeners(){
-        
-        const btn = this.element.querySelector('.btn-carregar');
-        btn.addEventListener('click', ()=>this.carregar());
-
-        const btnCerto = this.element.querySelector('.btn-certo');
-        btnCerto.addEventListener('click', ()=>this.respostaCerta());
-
-        const btnErrado = this.element.querySelector('.btn-errado');
-        btnErrado.addEventListener('click', ()=>this.respostaErrada());
-
-        const btnReiniciar = this.element.querySelector('.btn-limpar');
-        btnReiniciar.addEventListener('click', ()=>{
-            this.limpar();
-            this.LabelEstErr.innerHTML="";
-            this.LabelEst.innerHTML="";
-            this.carregar();
-        });
+        this.actions.querySelector('.btn-carregar').addEventListener('click', ()=>this.carregar());
+        this.actions.querySelector('.btn-certo').addEventListener('click', ()=>this.respostaCerta());
+        this.actions.querySelector('.btn-errado').addEventListener('click', ()=>this.respostaErrada());
+        this.actions.querySelector('.btn-limpar').addEventListener('click', ()=>this.restart());
     }
 
     carregar(){

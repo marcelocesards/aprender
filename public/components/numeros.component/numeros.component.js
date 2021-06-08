@@ -1,20 +1,31 @@
 import {  BaseComponent } from "../base.component/base.component.js";
 import {LabelLetrasComponent} from "../label-letras.component/label.letras.component.js";
 import {LabelEstatisticaComponent} from "../label-estatistica.component/label-estatistica.component.js";
+import {NumerosService} from "./numeros.service.js";
+import {ActionsComponent} from "../actions.component/actions.component.js";
+
 const baseComponent = new BaseComponent();
-const MESSAGE_END = 'Finalizado!';
+const numerosService = new NumerosService();
+
+const MESSAGE_END = 'Parabéns!';
 export class NumerosComponent {
     constructor(){
-       this.limpar();
+       this.clear();
+       this.start();
     }
-
-    limpar(){
+    async start(){
+        this.listaLetras = await numerosService.get();
+    }
+    async restart(){
+        this.clear();
+        this.start();
+        this.LabelEstErr.innerHTML="";
+        this.LabelEst.innerHTML="";
+        this.carregarLetra();
+    }
+    clear(){
         this.corretas=[];
         this.erradas=[];
-        this.listaLetras = []
-        for(let i = 0;i<10;i++){
-            this.listaLetras.push(Math.floor(Math.random() * 100));
-        }
     }
 
     async render(container){
@@ -22,37 +33,26 @@ export class NumerosComponent {
             container,
             templatePath: "/components/numeros.component/numeros.component.html"
         });
-        this.btnCarregarLetrasListener();
-        this.labelLetrasComponent = new LabelLetrasComponent();
-        this.label = await this.labelLetrasComponent.render(this.element);        
-        let labelEstatistica = new LabelEstatisticaComponent();
-        this.LabelEst = await labelEstatistica.render(this.element); 
-        this.LabelEstErr = await labelEstatistica.render(this.element); 
-        this.element.querySelector(".exibicaoLetras").appendChild(this.label);
-        this.element.querySelector(".certas").appendChild(this.LabelEst);
-        this.element.querySelector(".erradas").appendChild(this.LabelEstErr);
+        const actionsComponent = new ActionsComponent();
+        this.actions = await actionsComponent.render(this.element.querySelector(".navbar"));
+
+        const labelLetrasComponent = new LabelLetrasComponent();
+        this.label = await labelLetrasComponent.render(this.element.querySelector(".exibicaoLetras"));    
+
+        const labelEstatistica = new LabelEstatisticaComponent();
+        this.LabelEst = await labelEstatistica.render(this.element.querySelector(".certas")); 
+        this.LabelEstErr = await labelEstatistica.render(this.element.querySelector(".erradas")); 
+        
+        this.addEventListeners();
         this.carregarLetra();
         return this.element;
     }
 
-    btnCarregarLetrasListener(){
-        
-        const btn = document.querySelector('.btn-carregar');
-        btn.addEventListener('click', ()=>this.carregarLetra());
-
-        const btnCerto = document.querySelector('.btn-certo');
-        btnCerto.addEventListener('click', ()=>this.respostaCerta());
-
-        const btnErrado = document.querySelector('.btn-errado');
-        btnErrado.addEventListener('click', ()=>this.respostaErrada());
-
-        const btnReiniciar = document.querySelector('.btn-limpar');
-        btnReiniciar.addEventListener('click', ()=>{
-            this.limpar();
-            this.LabelEstErr.innerHTML="";
-            this.LabelEst.innerHTML="";
-            this.carregarLetra();
-        });
+    addEventListeners(){
+        this.actions.querySelector('.btn-carregar').addEventListener('click', ()=>this.carregarLetra());
+        this.actions.querySelector('.btn-certo').addEventListener('click', ()=>this.respostaCerta());
+        this.actions.querySelector('.btn-errado').addEventListener('click', ()=>this.respostaErrada());
+        this.actions.querySelector('.btn-limpar').addEventListener('click', ()=>this.restart());
     }
 
     carregarLetra(){
