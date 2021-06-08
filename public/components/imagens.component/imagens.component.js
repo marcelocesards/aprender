@@ -2,10 +2,11 @@ import {  BaseComponent } from "../base.component/base.component.js";
 import {LabelLetrasComponent} from "../label-letras.component/label.letras.component.js";
 import {LabelEstatisticaComponent} from "../label-estatistica.component/label-estatistica.component.js";
 import {ImagensService} from "./imagens.service.js";
+import {ActionsComponent} from "../actions.component/actions.component.js";
 
 const baseComponent = new BaseComponent();
 const imagensService = new ImagensService();
-const MESSAGE_END = 'Finalizado!';
+const MESSAGE_END = 'Parabéns!';
 export class ImagensComponent {
     constructor(){
        this.clear();
@@ -31,24 +32,26 @@ export class ImagensComponent {
             container,
             templatePath: "/components/imagens.component/imagens.component.html"
         });
+        const actionsComponent = new ActionsComponent();
+        this.actions = await actionsComponent.render(this.element.querySelector(".navbar"));
+
+        const labelLetrasComponent = new LabelLetrasComponent();
+        this.label = await labelLetrasComponent.render(this.element.querySelector(".exibicaoLetras"));        
+
+        const labelEstatistica = new LabelEstatisticaComponent();
+        this.LabelEst = await labelEstatistica.render(this.element.querySelector(".certas")); 
+        this.LabelEstErr = await labelEstatistica.render(this.element.querySelector(".erradas")); 
+
         this.addEventListeners();
-        this.labelLetrasComponent = new LabelLetrasComponent();
-        this.label = await this.labelLetrasComponent.render(this.element);        
-        let labelEstatistica = new LabelEstatisticaComponent();
-        this.LabelEst = await labelEstatistica.render(this.element); 
-        this.LabelEstErr = await labelEstatistica.render(this.element); 
-        this.element.querySelector(".exibicaoLetras").appendChild(this.label);
-        this.element.querySelector(".certas").appendChild(this.LabelEst);
-        this.element.querySelector(".erradas").appendChild(this.LabelEstErr);
         this.carregar();
         return this.element;
     }
 
     addEventListeners(){
-        this.element.querySelector('.btn-carregar').addEventListener('click', ()=>this.carregar());
-        this.element.querySelector('.btn-certo').addEventListener('click', ()=>this.respostaCerta());
-        this.element.querySelector('.btn-errado').addEventListener('click', ()=>this.respostaErrada());
-        this.element.querySelector('.btn-limpar').addEventListener('click', ()=>this.restart());
+        this.actions.querySelector('.btn-carregar').addEventListener('click', ()=>this.carregar());
+        this.actions.querySelector('.btn-certo').addEventListener('click', ()=>this.respostaCerta());
+        this.actions.querySelector('.btn-errado').addEventListener('click', ()=>this.respostaErrada());
+        this.actions.querySelector('.btn-limpar').addEventListener('click', ()=>this.restart());
     }
 
     carregar(){
