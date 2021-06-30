@@ -3,6 +3,7 @@ import {CoresComponent} from "./components/cores.component/cores.component.js";
 import {NumerosComponent} from "./components/numeros.component/numeros.component.js";
 import {ImagensComponent} from "./components/imagens.component/imagens.component.js";
 import {ModeOptionsComponent} from './components/mode-options.component/mode-options.component.js';
+import {DragnDropComponent} from "./components/dragndrop.component/dragndrop.component.js";
 
 async function renderModeOptions(){
     let modeOptions = new ModeOptionsComponent();
@@ -31,5 +32,6 @@ const aprender = {
     letras: ()=>new LetrasComponent().render(document.querySelector("#letras")),
     cores: ()=>new CoresComponent().render(document.querySelector("#cores")),
     numeros: ()=>new NumerosComponent().render(document.querySelector("#numeros")),
-    imagens: ()=>new ImagensComponent().render(document.querySelector("#imagens"))
+    imagens: ()=>new ImagensComponent().render(document.querySelector("#imagens")),
+    arrastar: ()=>new DragnDropComponent().render(document.querySelector("#dragndrop"))
 }

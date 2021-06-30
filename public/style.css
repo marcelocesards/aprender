@@ -82,3 +82,20 @@ body{
     justify-content: center;
     padding: 10px;
 }
+
+
+.exibicaoDragnDrop {
+	display: flex;
+    flex-flow: row wrap;
+}
+.drop {
+  width: 300px;
+  height: 300px;
+  padding: 5px;
+  margin: 2px;
+  border: 1px solid #aaaaaa;
+  text-align: center;
+}
+.drop-label {
+	font-size: 20px
+}
