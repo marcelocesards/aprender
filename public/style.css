@@ -83,10 +83,11 @@ body{
     padding: 10px;
 }
 
-
 .exibicaoDragnDrop {
 	display: flex;
     flex-flow: row wrap;
+    text-align: center;
+    max-width: 1024px;
 }
 .drop {
   width: 300px;
@@ -98,4 +99,45 @@ body{
 }
 .drop-label {
 	font-size: 20px
+}
+
+.draggable {
+    display: inline-block;
+    height: 0;
+    padding-top: 10px;
+    padding-bottom: 20%;
+    width: 20%;
+    
+    background-color: #000; 
+    color: white;
+    border-radius: 0.75em;
+    touch-action: none;
+    user-select: none;
+    text-align: center;
+    margin: 3px;
+}
+.dropzone {
+    display: inline-block;
+    height: 0;
+    padding-bottom: 40%;
+    width: 40%;
+
+    color: white;
+    font-size: 50px;
+    text-align: center;
+    margin: 2px;
+}
+.neutral {
+    background-color: #000;
+}
+.valid {
+    background-color: green;
+}
+.invalid {
+    background-color: red;
+}
+.draggable img{
+    max-width: 90%;
+    object-fit: cover;
+    border-radius: 7px;
 }
