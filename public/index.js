@@ -23,6 +23,7 @@ async function receiveMessage(event){
         cores.innerHTML = null;
         numeros.innerHTML = null;
         imagens.innerHTML = null;
+        dragndrop.innerHTML = null;
         aprender[mode]();
     }
 }
