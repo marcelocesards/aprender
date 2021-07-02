@@ -243,6 +243,12 @@ export class DragnDropComponent {
         });
         this.element.querySelectorAll(".draggable").forEach(element => {
             element.innerHTML = "";
+            element.removeAttribute("style");
+            element.removeAttribute("data-x");
+            element.removeAttribute("data-y");
+            element.classList.add("neutral");
+            element.classList.remove("invalid");
+            element.classList.remove("valid");
         });
     }
 }
