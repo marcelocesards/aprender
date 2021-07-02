@@ -4,6 +4,14 @@ import {LabelEstatisticaComponent} from "../label-estatistica.component/label-es
 import {DragnDropService} from "./dragndrop.service.js";
 import {ActionsComponent} from "../actions.component/actions.component.js";
 
+
+import 'https://cdn.interactjs.io/v1.9.20/auto-start/index.js'
+import 'https://cdn.interactjs.io/v1.9.20/actions/drag/index.js'
+import 'https://cdn.interactjs.io/v1.9.20/actions/resize/index.js'
+import 'https://cdn.interactjs.io/v1.9.20/modifiers/index.js'
+import 'https://cdn.interactjs.io/v1.9.20/dev-tools/index.js'
+import interact from 'https://cdn.interactjs.io/v1.9.20/interactjs/index.js'
+
 const baseComponent = new BaseComponent();
 const dragnDropService = new DragnDropService();
 const MESSAGE_END = 'Parabéns!';
@@ -53,14 +61,57 @@ export class DragnDropComponent {
         this.actions.querySelector('.btn-certo').addEventListener('click', ()=>this.respostaCerta());
         this.actions.querySelector('.btn-errado').addEventListener('click', ()=>this.respostaErrada());
         this.actions.querySelector('.btn-limpar').addEventListener('click', ()=>this.restart());
-        this.element.querySelectorAll(".drop").forEach((element)=>{
-            element.addEventListener("drop",(event)=>this.drop(event));
-            element.addEventListener("dragover",(event)=>this.allowDrop(event));
-        })
+        this.configureDraggableItems();
     }
+    configureDraggableItems(){
+        interact('.draggable').draggable({
+            listeners: {
+                move (event) {
+                    const target = event.target;
+                    target.classList.remove("valid");
+                    target.classList.remove("invalid");
+                    target.classList.add("neutral");
 
+                    const dataX = target.getAttribute('data-x');
+                    const dataY = target.getAttribute('data-y');
+                    const initialX = parseFloat(dataX) || 0;
+                    const initialY = parseFloat(dataY) || 0;
+
+                    const deltaX = event.dx;
+                    const deltaY = event.dy;
+
+                    const newX = initialX + deltaX;
+                    const newY = initialY + deltaY;
+
+                    target.style.transform = `translate(${newX}px, ${newY}px)`;
+                    target.setAttribute('data-x', newX);
+                    target.setAttribute('data-y', newY);
+                }
+            }
+        })
+        interact('.dropzone').dropzone({
+            accept: '.drag0, .drag1',
+            listeners: {
+                drop (event) {
+                    const target = event.target;
+                    const relatedTarget = event.relatedTarget;
+                    
+                    if(target.getAttribute("key")==relatedTarget.getAttribute("key")){
+                        relatedTarget.classList.add("valid");
+                        relatedTarget.classList.remove("invalid");
+                        relatedTarget.classList.remove("neutral");
+                    }
+                    else{
+                        relatedTarget.classList.add("invalid");
+                        relatedTarget.classList.remove("neutral");
+                        relatedTarget.classList.remove("valid");
+                    }
+                }
+            }
+        });
+    }
     carregar(){
-        this.clearDrops();
+        this.clearImages();
         let content = this.getRandom();
         if(content === MESSAGE_END){
             this.label.innerHTML=MESSAGE_END;
@@ -91,22 +142,31 @@ export class DragnDropComponent {
 
             let names = [content.key,content2.key];
             names = this.shuffle(names);
-            this.element.querySelector("#div1").appendChild(this.createLabel({
+            let div1 = this.element.querySelector("#div1")
+            div1.appendChild(this.createLabel({
                 text: names[0]
             }));
-            this.element.querySelector("#div2").appendChild(this.createLabel({
+            div1.setAttribute("key",names[0]);
+
+            let div2 = this.element.querySelector("#div2")
+            div2.appendChild(this.createLabel({
                 text: names[1]
             }));
+            div2.setAttribute("key",names[1]);
 
-            this.element.querySelector("#div3").appendChild(this.createImage({
+            let div3 = this.element.querySelector("#div3")
+            div3.appendChild(this.createImage({
                 url: content.value,
                 alternativeText: content.source
             }));
+            div3.setAttribute("key",content.key);
             
-            this.element.querySelector("#div4").appendChild(this.createImage({
+            let div4 = this.element.querySelector("#div4")
+            div4.appendChild(this.createImage({
                 url: content2.value,
                 alternativeText: content2.source
             }));
+            div4.setAttribute("key",content2.key);
         }
     }
     shuffle(array) {
@@ -137,9 +197,6 @@ export class DragnDropComponent {
         img.id = alternativeText;
         img.src = url;
         img.alt = alternativeText;
-        img.height = 200;
-        img.draggable = true;
-        img.addEventListener("drag",(event)=>this.drag(event));
         return img;
     }
 
@@ -180,22 +237,12 @@ export class DragnDropComponent {
             .join(', ')}`;
         this.carregar();
     }
-    allowDrop(ev) {
-        ev.preventDefault();
-    }
-
-    drag(ev) {
-        this.dataTransfer = ev.target.id;
-    }
-
-    drop(ev) {
-        ev.preventDefault();
-        let data = this.dataTransfer;
-        ev.target.appendChild(document.getElementById(data));
-    }
-    clearDrops(){
-        this.element.querySelectorAll(".drop").forEach(element => {
-            element.innerHTML="";
+    clearImages(){
+        this.element.querySelectorAll(".dropzone").forEach(element => {
+            element.innerHTML = "";
+        });
+        this.element.querySelectorAll(".draggable").forEach(element => {
+            element.innerHTML = "";
         });
     }
 }
