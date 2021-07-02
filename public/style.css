@@ -88,6 +88,7 @@ body{
     flex-flow: row wrap;
     text-align: center;
     max-width: 1024px;
+    justify-content: center;
 }
 .drop {
   width: 300px;
@@ -140,4 +141,10 @@ body{
     max-width: 90%;
     object-fit: cover;
     border-radius: 7px;
+}
+.description {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    padding: 0 50px;
 }

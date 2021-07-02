@@ -35,6 +35,7 @@ export class NumerosComponent {
         });
         const actionsComponent = new ActionsComponent();
         this.actions = await actionsComponent.render(this.element.querySelector(".navbar"));
+        this.element.querySelector(".description").innerHTML = "A criança deve dizer qual o número na tela. Um adulto confirma se está correto e aciona uma opção no topo da tela.";
 
         const labelLetrasComponent = new LabelLetrasComponent();
         this.label = await labelLetrasComponent.render(this.element.querySelector(".exibicaoLetras"));    

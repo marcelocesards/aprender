@@ -4,7 +4,6 @@ import {LabelEstatisticaComponent} from "../label-estatistica.component/label-es
 import {DragnDropService} from "./dragndrop.service.js";
 import {ActionsComponent} from "../actions.component/actions.component.js";
 
-
 import 'https://cdn.interactjs.io/v1.9.20/auto-start/index.js'
 import 'https://cdn.interactjs.io/v1.9.20/actions/drag/index.js'
 import 'https://cdn.interactjs.io/v1.9.20/actions/resize/index.js'
@@ -40,6 +39,7 @@ export class DragnDropComponent {
         });
         const actionsComponent = new ActionsComponent();
         this.actions = await actionsComponent.render(this.element.querySelector(".navbar"));
+        this.element.querySelector(".description").innerHTML = "A criança deve levar as imagens até os blocos com o nome correspondente. Um adulto confirma se está correto e aciona uma opção no topo da tela.";
 
         const labelLetrasComponent = new LabelLetrasComponent();
         this.label = await labelLetrasComponent.render(this.element.querySelector(".exibicaoDragnDrop"));        
