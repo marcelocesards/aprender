@@ -13,6 +13,7 @@ export class DropZoneComponent {
             templatePath: "/components/dropzone.component/dropzone.component.html",
         });
         this.element.innerHTML = this.text;
+        this.element.setAttribute('key',this.text);
         return this.element;
     }
     async setDropZones(accept=this.accept){

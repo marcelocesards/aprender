@@ -2,16 +2,22 @@ import { BaseComponent } from "../base.component/base.component.js";
 const baseComponent = new BaseComponent();
 
 export class DraggableComponent {
+    constructor({interact,text}){
+        this.interact = interact;
+        this.text = text;
+    }
     async render(container) {
         this.element = await baseComponent.renderTemplate({
             container,
             templatePath: "/components/draggable.component/draggable.component.html",
         });
         
+        this.element.innerHTML = this.text;
+        this.element.setAttribute('key',this.text);
         return this.element;
     }
     async setDraggables(){
-        interact('.draggable').draggable({
+        this.interact('.draggable').draggable({
             listeners: {
                 move (event) {
                     const target = event.target;

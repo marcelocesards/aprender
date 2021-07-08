@@ -21,6 +21,7 @@ const MESSAGE_END = 'Parabéns!';
 export class SilabasComponent {
     constructor(){
         this.dropzones = [];
+        this.draggables = [];
     }
     async start(){
         this.lista = await silabasService.get();
@@ -30,6 +31,7 @@ export class SilabasComponent {
         await this.start();
         this.LabelEstErr.innerHTML="";
         this.LabelEst.innerHTML="";
+        this.element.querySelector(".exibicaoDragnDrop p").innerHTML = "";
         this.carregar();
     }
     clear(){
@@ -71,18 +73,24 @@ export class SilabasComponent {
         const dropZoneComponent = new DropZoneComponent({interact});
         await dropZoneComponent.setDropZones({accept: ".draggable"});
     }
+    async configureDraggables(){
+        const draggableComponent = new DraggableComponent({interact});
+        await draggableComponent.setDraggables();
+    }
     async createDropZone(text){
         const dropZoneComponent = new DropZoneComponent({interact,text});
         let dropzone = await dropZoneComponent.render(this.element.querySelector(".exibicaoDragnDrop"));
         dropzone.classList.add("dropzone-silaba");
         return dropzone;
     }
-    async configureDraggables(){
-        const draggableComponent = new DraggableComponent();
-
+    async createDragable(text){
+        const draggableComponent = new DraggableComponent({interact,text});
+        let draggable = await draggableComponent.render(this.element.querySelector(".exibicaoDragnDrop"))
+        draggable.classList.add("draggable-silaba");
+        return draggable;
     }
     async carregar(){
-        this.clearImages();
+        this.clearObjects();
         let content = this.getRandom();
         if(content === MESSAGE_END){
             this.label.innerHTML=MESSAGE_END;
@@ -106,7 +114,8 @@ export class SilabasComponent {
             }
 
             for(const silaba of silabas){
-                console.log(silaba);
+                let draggable = await this.createDragable(silaba);
+                this.draggables.push(draggable);
             }
             this.configureDropZones();
             this.configureDraggables();
@@ -134,13 +143,6 @@ export class SilabasComponent {
         p.classList.add("drop-label");
         p.innerHTML = text;
         return p;
-    }
-    createImage({url,alternativeText}){
-        let img = document.createElement("img");
-        img.id = alternativeText;
-        img.src = url;
-        img.alt = alternativeText;
-        return img;
     }
 
     getRandom(){
@@ -180,18 +182,16 @@ export class SilabasComponent {
             .join(', ')}`;
         this.carregar();
     }
-    clearImages(){
+    clearObjects(){
+        this.element.querySelector(".word-exibition").innerHTML = "";
+        this.dropzones = [];
+        this.draggables = [];
+        this.draggables = [];
         this.element.querySelectorAll(".dropzone").forEach(element => {
-            element.innerHTML = "";
+            element.remove();
         });
         this.element.querySelectorAll(".draggable").forEach(element => {
-            element.innerHTML = "";
-            element.removeAttribute("style");
-            element.removeAttribute("data-x");
-            element.removeAttribute("data-y");
-            element.classList.add("neutral");
-            element.classList.remove("invalid");
-            element.classList.remove("valid");
+            element.remove();
         });
     }
 }
