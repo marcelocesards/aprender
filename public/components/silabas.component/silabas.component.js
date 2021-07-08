@@ -1,8 +1,11 @@
 import {  BaseComponent } from "../base.component/base.component.js";
 import {LabelLetrasComponent} from "../label-letras.component/label.letras.component.js";
 import {LabelEstatisticaComponent} from "../label-estatistica.component/label-estatistica.component.js";
-import {DragnDropService} from "./dragndrop.service.js";
+import {SilabasService} from "./silabas.service.js";
 import {ActionsComponent} from "../actions.component/actions.component.js";
+import {DropZoneComponent} from "../dropzone.component/dropzone.component.js";
+import {DraggableComponent} from "../draggable.component/draggable.component.js";
+
 
 import 'https://cdn.interactjs.io/v1.9.20/auto-start/index.js'
 import 'https://cdn.interactjs.io/v1.9.20/actions/drag/index.js'
@@ -12,19 +15,23 @@ import 'https://cdn.interactjs.io/v1.9.20/dev-tools/index.js'
 import interact from 'https://cdn.interactjs.io/v1.9.20/interactjs/index.js'
 
 const baseComponent = new BaseComponent();
-const dragnDropService = new DragnDropService();
+const silabasService = new SilabasService();
 const MESSAGE_END = 'Parabéns!';
-export class DragnDropComponent {
+
+export class SilabasComponent {
     constructor(){
+        this.dropzones = [];
+        this.draggables = [];
     }
     async start(){
-        this.lista = await dragnDropService.get();
+        this.lista = await silabasService.get();
     }
     async restart(){
         this.clear();
         await this.start();
         this.LabelEstErr.innerHTML="";
         this.LabelEst.innerHTML="";
+        this.element.querySelector(".exibicaoDragnDrop p").innerHTML = "";
         this.carregar();
     }
     clear(){
@@ -35,11 +42,11 @@ export class DragnDropComponent {
     async render(container){
         this.element = await baseComponent.renderTemplate({
             container,
-            templatePath: "/components/dragndrop.component/dragndrop.component.html"
+            templatePath: "/components/silabas.component/silabas.component.html"
         });
         const actionsComponent = new ActionsComponent();
         this.actions = await actionsComponent.render(this.element.querySelector(".navbar"));
-        this.element.querySelector(".description").innerHTML = "A criança deve levar as imagens até os blocos com o nome correspondente. Um adulto confirma se está correto e aciona uma opção no topo da tela.";
+        this.element.querySelector(".description").innerHTML = "A criança deve levar as sílabas ao bloco correspondente. Um adulto confirma se está correto e aciona uma opção no topo da tela.";
 
         const labelLetrasComponent = new LabelLetrasComponent();
         this.label = await labelLetrasComponent.render(this.element.querySelector(".exibicaoDragnDrop"));        
@@ -61,57 +68,29 @@ export class DragnDropComponent {
         this.actions.querySelector('.btn-certo').addEventListener('click', ()=>this.respostaCerta());
         this.actions.querySelector('.btn-errado').addEventListener('click', ()=>this.respostaErrada());
         this.actions.querySelector('.btn-limpar').addEventListener('click', ()=>this.restart());
-        this.configureDraggableItems();
     }
-    configureDraggableItems(){
-        interact('.draggable').draggable({
-            listeners: {
-                move (event) {
-                    const target = event.target;
-                    target.classList.remove("valid");
-                    target.classList.remove("invalid");
-                    target.classList.add("neutral");
-
-                    const dataX = target.getAttribute('data-x');
-                    const dataY = target.getAttribute('data-y');
-                    const initialX = parseFloat(dataX) || 0;
-                    const initialY = parseFloat(dataY) || 0;
-
-                    const deltaX = event.dx;
-                    const deltaY = event.dy;
-
-                    const newX = initialX + deltaX;
-                    const newY = initialY + deltaY;
-
-                    target.style.transform = `translate(${newX}px, ${newY}px)`;
-                    target.setAttribute('data-x', newX);
-                    target.setAttribute('data-y', newY);
-                }
-            }
-        })
-        interact('.dropzone').dropzone({
-            accept: '.drag0, .drag1',
-            listeners: {
-                drop (event) {
-                    const target = event.target;
-                    const relatedTarget = event.relatedTarget;
-                    
-                    if(target.getAttribute("key")==relatedTarget.getAttribute("key")){
-                        relatedTarget.classList.add("valid");
-                        relatedTarget.classList.remove("invalid");
-                        relatedTarget.classList.remove("neutral");
-                    }
-                    else{
-                        relatedTarget.classList.add("invalid");
-                        relatedTarget.classList.remove("neutral");
-                        relatedTarget.classList.remove("valid");
-                    }
-                }
-            }
-        });
+    async configureDropZones(){
+        const dropZoneComponent = new DropZoneComponent({interact});
+        await dropZoneComponent.setDropZones({accept: ".draggable"});
     }
-    carregar(){
-        this.clearImages();
+    async configureDraggables(){
+        const draggableComponent = new DraggableComponent({interact});
+        await draggableComponent.setDraggables();
+    }
+    async createDropZone(text){
+        const dropZoneComponent = new DropZoneComponent({interact,text});
+        let dropzone = await dropZoneComponent.render(this.element.querySelector(".exibicaoDragnDrop"));
+        dropzone.classList.add("dropzone-silaba");
+        return dropzone;
+    }
+    async createDragable(text){
+        const draggableComponent = new DraggableComponent({interact,text});
+        let draggable = await draggableComponent.render(this.element.querySelector(".exibicaoDragnDrop"))
+        draggable.classList.add("draggable-silaba");
+        return draggable;
+    }
+    async carregar(){
+        this.clearObjects();
         let content = this.getRandom();
         if(content === MESSAGE_END){
             this.label.innerHTML=MESSAGE_END;
@@ -120,53 +99,26 @@ export class DragnDropComponent {
             return;
         }
         else{
-            let content2 = this.getRandom();
-            if(content2 === MESSAGE_END){
-                this.label.innerHTML=MESSAGE_END;
-                this.label.removeAttribute("style");
-                this.label.classList.add("labelFinalizado");
-            }
-            let count=0;
-            while(content.value==content2.value){
-                content2 = this.getRandom();
-                count++;
-                if(count==5){
-                    this.label.innerHTML=MESSAGE_END;
-                    this.label.removeAttribute("style");
-                    this.label.classList.add("labelFinalizado");
-                    return;
-                }
-            }
 
             this.label.classList.remove("labelFinalizado");
 
-            let names = [content.key,content2.key];
-            names = this.shuffle(names);
-            let div1 = this.element.querySelector("#div1")
-            div1.appendChild(this.createLabel({
-                text: names[0]
+            let silabas = [...content.value];
+            silabas = this.shuffle(silabas);
+            this.element.querySelector(".word-exibition").appendChild(this.createLabel({
+                text: content.key
             }));
-            div1.setAttribute("key",names[0]);
-
-            let div2 = this.element.querySelector("#div2")
-            div2.appendChild(this.createLabel({
-                text: names[1]
-            }));
-            div2.setAttribute("key",names[1]);
-
-            let div3 = this.element.querySelector("#div3")
-            div3.appendChild(this.createImage({
-                url: content.value,
-                alternativeText: content.source
-            }));
-            div3.setAttribute("key",content.key);
             
-            let div4 = this.element.querySelector("#div4")
-            div4.appendChild(this.createImage({
-                url: content2.value,
-                alternativeText: content2.source
-            }));
-            div4.setAttribute("key",content2.key);
+            for(const v of content.value){
+                let dropzone = await this.createDropZone(v);
+                this.dropzones.push(dropzone);
+            }
+
+            for(const silaba of silabas){
+                let draggable = await this.createDragable(silaba);
+                this.draggables.push(draggable);
+            }
+            this.configureDropZones();
+            this.configureDraggables();
         }
     }
     shuffle(array) {
@@ -191,13 +143,6 @@ export class DragnDropComponent {
         p.classList.add("drop-label");
         p.innerHTML = text;
         return p;
-    }
-    createImage({url,alternativeText}){
-        let img = document.createElement("img");
-        img.id = alternativeText;
-        img.src = url;
-        img.alt = alternativeText;
-        return img;
     }
 
     getRandom(){
@@ -237,18 +182,16 @@ export class DragnDropComponent {
             .join(', ')}`;
         this.carregar();
     }
-    clearImages(){
+    clearObjects(){
+        this.element.querySelector(".word-exibition").innerHTML = "";
+        this.dropzones = [];
+        this.draggables = [];
+        this.draggables = [];
         this.element.querySelectorAll(".dropzone").forEach(element => {
-            element.innerHTML = "";
+            element.remove();
         });
         this.element.querySelectorAll(".draggable").forEach(element => {
-            element.innerHTML = "";
-            element.removeAttribute("style");
-            element.removeAttribute("data-x");
-            element.removeAttribute("data-y");
-            element.classList.add("neutral");
-            element.classList.remove("invalid");
-            element.classList.remove("valid");
+            element.remove();
         });
     }
 }

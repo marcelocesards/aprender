@@ -4,6 +4,7 @@ import {NumerosComponent} from "./components/numeros.component/numeros.component
 import {ImagensComponent} from "./components/imagens.component/imagens.component.js";
 import {ModeOptionsComponent} from './components/mode-options.component/mode-options.component.js';
 import {DragnDropComponent} from "./components/dragndrop.component/dragndrop.component.js";
+import {SilabasComponent} from "./components/silabas.component/silabas.component.js";
 
 async function renderModeOptions(){
     let modeOptions = new ModeOptionsComponent();
@@ -24,6 +25,7 @@ async function receiveMessage(event){
         numeros.innerHTML = null;
         imagens.innerHTML = null;
         dragndrop.innerHTML = null;
+        silabas.innerHTML = null;
         aprender[mode]();
     }
 }
@@ -34,5 +36,6 @@ const aprender = {
     cores: ()=>new CoresComponent().render(document.querySelector("#cores")),
     numeros: ()=>new NumerosComponent().render(document.querySelector("#numeros")),
     imagens: ()=>new ImagensComponent().render(document.querySelector("#imagens")),
-    arrastar: ()=>new DragnDropComponent().render(document.querySelector("#dragndrop"))
+    arrastar: ()=>new DragnDropComponent().render(document.querySelector("#dragndrop")),
+    silabas: ()=>new SilabasComponent().render(document.querySelector("#silabas"))
 }
