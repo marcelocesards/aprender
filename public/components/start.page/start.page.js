@@ -1,25 +1,30 @@
 import {  BaseComponent } from "../base.component/base.component.js";
-const baseComponent = new BaseComponent();
-export class ModeOptionsComponent {
-    constructor(){
-    }
 
+const baseComponent = new BaseComponent();
+export class StartPage {
+    constructor(){
+
+    }
     async render(container){
         this.element = await baseComponent.renderTemplate({
             container,
-            templatePath: "/components/mode-options.component/mode-options.component.html"
+            templatePath: "/components/start.page/start.page.html"
         });
+        
         this.addEventListeners();
         return this.element;
     }
     addEventListeners(){
-        this.element.addEventListener("change",()=>this.startSelectedMode());
+        this.element.querySelectorAll(".button-container").forEach((button)=>{
+            button.addEventListener("click",()=>this.startSelectedMode(button.getAttribute("data-mode")));
+        })
     }
+    
     /**
      * Envia uma mensagem para a aplicação solicitando a execução do modo selecionado
      */
-    startSelectedMode(){
-        const data = {type: "select-mode",message: this.element.value};
+     startSelectedMode(mode){
+        const data = {type: "select-mode",message: mode};
         window.postMessage(JSON.stringify(data),window.location.href);
     }
 }
