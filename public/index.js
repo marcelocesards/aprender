@@ -2,40 +2,36 @@ import {LetrasComponent} from "./components/letras.component/letras.component.js
 import {CoresComponent} from "./components/cores.component/cores.component.js";
 import {NumerosComponent} from "./components/numeros.component/numeros.component.js";
 import {ImagensComponent} from "./components/imagens.component/imagens.component.js";
-import {ModeOptionsComponent} from './components/mode-options.component/mode-options.component.js';
 import {DragnDropComponent} from "./components/dragndrop.component/dragndrop.component.js";
 import {SilabasComponent} from "./components/silabas.component/silabas.component.js";
+import {StartPage} from "./components/start.page/start.page.js";
+import {Messenger} from "./components/messenger.component/messenger.component.js";
 
-async function renderModeOptions(){
-    let modeOptions = new ModeOptionsComponent();
-    await modeOptions.render(document.querySelector(".nav-bar"));
-    window.addEventListener("message", receiveMessage, false);
-    
-    let mode = localStorage.getItem("mode") || modo.value;
-    modo.value = mode;
-    aprender[mode]();
+const mainContent = document.querySelector("#main-content");
+const messenger = new Messenger();
+const Components = {
+    letras: LetrasComponent,
+    cores: CoresComponent,
+    numeros: NumerosComponent,
+    imagens: ImagensComponent,
+    arrastar: DragnDropComponent,
+    silabas: SilabasComponent,
+    start: StartPage
 }
 
-async function receiveMessage(event){
-    if(event.data.indexOf("start-mode:")==0 && window.location.href.indexOf(event.origin)==0){
-        let mode = event.data.split(":")[1];
-        localStorage.setItem("mode",mode);
-        letras.innerHTML = null;
-        cores.innerHTML = null;
-        numeros.innerHTML = null;
-        imagens.innerHTML = null;
-        dragndrop.innerHTML = null;
-        silabas.innerHTML = null;
-        aprender[mode]();
-    }
+async function renderModeOptions(){
+    messenger.addSubscriber({type:"select-mode", callback:receiveMessage});
+    let mode = localStorage.getItem("mode") || "start";
+    executeMode(mode);
+}
+
+async function receiveMessage(data){
+    localStorage.setItem("mode",data.message);
+    executeMode(data.message);
 }
 renderModeOptions();
 
-const aprender = {
-    letras: ()=>new LetrasComponent().render(document.querySelector("#letras")),
-    cores: ()=>new CoresComponent().render(document.querySelector("#cores")),
-    numeros: ()=>new NumerosComponent().render(document.querySelector("#numeros")),
-    imagens: ()=>new ImagensComponent().render(document.querySelector("#imagens")),
-    arrastar: ()=>new DragnDropComponent().render(document.querySelector("#dragndrop")),
-    silabas: ()=>new SilabasComponent().render(document.querySelector("#silabas"))
+function executeMode(mode){
+    mainContent.innerHTML = "";
+    new Components[mode]().render(mainContent);
 }

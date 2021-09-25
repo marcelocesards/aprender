@@ -14,6 +14,9 @@ export class ActionsComponent {
         return this.element;
     }
     addEventListeners(){
-        
+        this.element.querySelector(".btn-voltar").addEventListener("click",()=>{
+            const data = {type: "select-mode",message: "start"};
+            window.postMessage(JSON.stringify(data),window.location.href);
+        })
     }
 }

@@ -1,3 +1,4 @@
+@import "./components/start.page/start.page.css";
 body{
     box-sizing: border-box;
     margin: 0;
@@ -27,7 +28,15 @@ body{
     text-decoration: none;
     font-size: 16px;
     margin: 2px;
+    box-shadow: 0;
+    transition: box-shadow 1s;
+    border: 1px solid #eee;
+    cursor: pointer;
 }
+.btn:hover {
+    box-shadow: 0 0 3px #333;
+}
+
 .btn-info {
     background-color: #008CBA;
     color: white;
