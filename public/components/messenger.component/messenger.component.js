@@ -15,7 +15,7 @@ export class Messenger {
             }
         }
     }
-    addSubscriber({type,callback}){
+    subscribe({type,callback}){
         this.subscribers.push({type,emit:callback});
     }
 }

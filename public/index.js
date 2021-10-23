@@ -20,7 +20,7 @@ const Components = {
 }
 
 async function renderModeOptions(){
-    messenger.addSubscriber({type:"select-mode", callback:receiveMessage});
+    messenger.subscribe({type:"select-mode", callback:receiveMessage});
     let mode = localStorage.getItem("mode") || "start";
     executeMode(mode);
 }
